@@ -12,7 +12,7 @@ Live Deployment: https://your-streamlit-app.streamlit.app (update after deploy)
 
 Unique Dataset  
 - 1986 real clinical records (cleaned from 1986 → 1950+ rows after fixing bad entries)  
-- 30+ rich features: A1–A10 screening, Q-CHAT-10, CARS, developmental milestones, comorbidities  
+- 30+ features: A1–A10 screening, Q-CHAT-10, CARS, developmental milestones, comorbidities  
 - Perfectly balanced target (`ASD_traits`: Yes/No)
 - 
 Models Used (As Per Your Training)
