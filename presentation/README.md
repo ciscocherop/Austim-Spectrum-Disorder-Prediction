@@ -28,4 +28,4 @@ Matplotlib
 Seaborn
 Scikit-learn
 
-Authors 1.Nabukenya Florence 2.Sisco Cherop 3.Salha Oweci
+Authors 1.Sisco Cherop 2.Salha Oweci 3.Nabukenya Florence
