@@ -19,3 +19,13 @@ Models Used (As Per Your Training)
 1. Random Forest →  96.22% (saved as best model)  
 2. Deep Neural Network (TensorFlow/Keras) → 92.95%
 ## Repository Structure
+
+Tools & Libraries
+Python
+Pandas
+NumPy
+Matplotlib
+Seaborn
+Scikit-learn
+
+Authors 1.Nabukenya Florence 2.Sisco Cherop 3.Salha Oweci
