@@ -3,6 +3,8 @@ import joblib
 import numpy as np
 
 
+model = joblib.load("/content/asd_model.pkl")
+
 st.title("ASD Traits Prediction App")
 st.write("Enter the child's information to predict ASD Traits")
 
@@ -59,5 +61,6 @@ if st.button("Predict ASD Traits"):
         st.error("⚠️ The model predicts: **ASD Traits Present**")
     else:
         st.success("✅ The model predicts: **No ASD Traits**")
+
 
 
