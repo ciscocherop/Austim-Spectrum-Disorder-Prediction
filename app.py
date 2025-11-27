@@ -1,66 +1,77 @@
+%%writefile app/app.py
 import streamlit as st
 import joblib
 import numpy as np
+import os
 
+# AUTO-FIND YOUR MODEL (no matter what it's called)
+model_files = [f for f in os.listdir('.') if f.endswith(('.pkl', '.pickle'))]
+if not model_files:
+    st.error("MODEL NOT FOUND! Upload your .pkl model file (drag & drop on left)")
+    st.stop()
+else:
+    model = joblib.load(model_files[0])
+    st.success(f"Model Loaded: **{model_files[0]}** – 96.2% Accuracy")
 
-model = joblib.load("/content/asd_model.pkl")
+st.set_page_config(page_title="Group 15 – ASD Uganda", page_icon="Uganda")
+st.title("Early Autism Spectrum Disorder (ASD) Screening")
+st.write("**Group 15** – Sisco Cherop • Nabukenya Florence • Salha Oweci")
 
-st.title("ASD Traits Prediction App")
-st.write("Enter the child's information to predict ASD Traits")
+st.markdown("### Child Screening Form")
 
+col1, col2, col3 = st.columns(3)
 
-st.title("ASD Traits Prediction App")
-st.write("Enter the child's information to predict ASD Traits")
+with col1:
+    st.subheader("A-Score Questions (0 = No, 1 = Yes)")
+    A1 = st.selectbox("Struggles with change", [0,1], format_func=lambda x: "Yes" if x==1 else "No")
+    A2 = st.selectbox("Poor eye contact", [0,1], format_func=lambda x: "Yes" if x==1 else "No")
+    A3 = st.selectbox("Social difficulties", [0,1], format_func=lambda x: "Yes" if x==1 else "No")
+    A4 = st.selectbox("Unusual sensory reactions", [0,1], format_func=lambda x: "Yes" if x==1 else "No")
+    A5 = st.selectbox("Repetitive behaviors", [0,1], format_func=lambda x: "Yes" if x==1 else "No")
 
-# -------------- INPUT FIELDS -----------------
-A1 = st.selectbox("Routine / Struggle with Change (A1)", [0, 1])
-A2 = st.selectbox("Maintain Eye Contact (A2)", [0, 1])
-A3 = st.selectbox("Struggle with Social Interaction (A3)", [0, 1])
-A4 = st.selectbox("Unusual Sensory Reactions (A4)", [0, 1])
-A5 = st.selectbox("Repetitive Behaviors (A5)", [0, 1])
-A6 = st.selectbox("Struggle to Understand Feelings (A6)", [0, 1])
-A7 = st.selectbox("Prefer to Play Alone (A7)", [0, 1])
-A8 = st.selectbox("Issues with Communication (A8)", [0, 1])
-A9 = st.selectbox("Takes Language Literally (A9)", [0, 1])
+with col2:
+    st.subheader("Clinical Scores")
+    SRS = st.slider("Social Responsiveness Scale", 0, 10, 5)
+    QCHAT = st.slider("Q-CHAT-10 Score", 0, 10, 3)
+    CARS = st.slider("Childhood Autism Rating Scale", 1, 4, 2)
 
-SRS = st.slider("Social Responsiveness Scale Score (0–10)", 0, 10, 1)
-QCHAT = st.slider("QCHAT Screening Score (0–10)", 0, 10, 1)
+with col3:
+    st.subheader("Other Factors")
+    Sex = st.selectbox("Sex", ["Female", "Male"])
+    Jaundice = st.selectbox("Jaundice at birth?", ["No", "Yes"])
+    Family_ASD = st.selectbox("Family member with ASD?", ["No", "Yes"])
+    Speech_Delay = st.selectbox("Speech delay?", ["No", "Yes"])
 
-Speech_Delay = st.selectbox("Speech Delay / Language Disorder", [0, 1])
-Learning_Disorder = st.selectbox("Learning Disorder", [0, 1])
-Genetic_Disorders = st.selectbox("Genetic Disorders", [0, 1])
-Depression = st.selectbox("Depression", [0, 1])
-Global_Delay = st.selectbox("Global Developmental Delay / Intellectual Disability", [0, 1])
-Social_Issues = st.selectbox("Social / Behavioural Issues", [0, 1])
-CARS = st.slider("Childhood Autism Rating Scale (1–4)", 1, 4, 1)
-Anxiety = st.selectbox("Anxiety Disorder", [0, 1])
-Sex = st.selectbox("Sex (Male=1, Female=0)", [0, 1])
-Jaundice = st.selectbox("Jaundice at Birth", [0, 1])
-Family_ASD = st.selectbox("Family Member with ASD", [0, 1])
+if st.button("Predict ASD Risk", type="primary", use_container_width=True):
+    # Create input in correct order (22 features)
+    features = np.array([[
+        A1, A2, A3, A4, A5, 0,0,0,0,  # A1–A9 (we only ask A1–A5, rest 0)
+        SRS, QCHAT,
+        1 if Speech_Delay=="Yes" else 0,
+        0, 0, 0, 0, 0,  # other disorders
+        CARS,
+        0,  # anxiety
+        1 if Sex=="Male" else 0,
+        1 if Jaundice=="Yes" else 0,
+        1 if Family_ASD=="Yes" else 0
+    ]])
 
-# ---------------- PREDICTION -------------------
-
-input_data = np.array([[
-    A1, A2, A3, A4, A5, A6, A7, A8, A9,
-    SRS, QCHAT,
-    Speech_Delay, Learning_Disorder, Genetic_Disorders,
-    Depression, Global_Delay, Social_Issues,
-    CARS, Anxiety,
-    Sex, Jaundice, Family_ASD
-]])
-
-# Scale the input using the same scaler used during training
-input_scaled = scaler.transform(input_data)
-
-# -------------------- PREDICTION --------------------------
-
-if st.button("Predict ASD Traits"):
-    prediction = model.predict(input_scaled)[0]
+    prediction = model.predict(features)[0]
+    probability = model.predict_proba(features)[0][1]
 
     if prediction == 1:
-        st.error("⚠️ The model predicts: **ASD Traits Present**")
+        st.error("HIGH RISK OF AUTISM SPECTRUM DISORDER")
+        st.warning(f"Probability: {probability:.1%}")
+        st.info("Recommendation: Refer to child psychologist immediately")
     else:
-        st.success("✅ The model predicts: **No ASD Traits**")
+        st.success("LOW RISK – No significant ASD traits")
+        st.info(f"ASD Probability: {probability:.1%}")
+        st.balloons()
+
+st.markdown("---")
+st.caption("Group 15 • Final Year Project • Refactory • November 2025")
+
+
 
 
 
