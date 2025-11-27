@@ -1,4 +1,4 @@
-%%writefile app/app.py
+
 import streamlit as st
 import joblib
 import numpy as np
@@ -70,6 +70,7 @@ if st.button("Predict ASD Risk", type="primary", use_container_width=True):
 
 st.markdown("---")
 st.caption("Group 15 • Final Year Project • Refactory • November 2025")
+
 
 
 
