@@ -1,9 +1,5 @@
-pandas
-numpy
-scikit-learn
-tensorflow==2.16.1
-matplotlib
-seaborn
 streamlit
+numpy
+pandas
+scikit-learn
 joblib
-openpyxl
