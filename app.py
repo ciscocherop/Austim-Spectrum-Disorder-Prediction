@@ -2,9 +2,8 @@ import streamlit as st
 import numpy as np
 import joblib
 
-# Load your model and scaler
-model = joblib.load("asd_model.pkl")
-scaler = joblib.load("scaler.pkl")
+scaler = joblib.load("/content/scaler_nn.pkl")
+model = tf.keras.models.load_model("/content/neural_network_asd_model.keras")
 
 st.title("ASD Traits Screening Prediction App")
 st.write("Fill in the child's information below to predict ASD traits.")
