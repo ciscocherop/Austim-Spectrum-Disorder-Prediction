@@ -1,11 +1,11 @@
 import streamlit as st
 import joblib
 import numpy as np
-import tensorflow as tf
 
-# Load model & scaler
-scaler = joblib.load("/content/scaler_nn.pkl")
-model = tf.keras.models.load_model("/content/neural_network_asd_model.keras")
+
+st.title("ASD Traits Prediction App")
+st.write("Enter the child's information to predict ASD Traits")
+
 
 st.title("ASD Traits Prediction App")
 st.write("Enter the child's information to predict ASD Traits")
@@ -59,4 +59,5 @@ if st.button("Predict ASD Traits"):
         st.error("⚠️ The model predicts: **ASD Traits Present**")
     else:
         st.success("✅ The model predicts: **No ASD Traits**")
+
 
