@@ -107,8 +107,9 @@ if st.button("Predict ASD Risk", type="primary", use_container_width=True):
         st.error("HIGH RISK OF AUTISM SPECTRUM DISORDER")
         st.warning("Recommendation: Refer to child psychologist immediately")
     else:
-        st.success("LOW RISK – No significant ASD traits")
+        st.success("LOW RISK – No significant ASD traits ")
         st.balloons()
 
 st.markdown("---")
 st.caption("Group 15 • Final Year Project • Refactory • November 2025")
+
