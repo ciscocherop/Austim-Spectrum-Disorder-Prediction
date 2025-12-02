@@ -26,29 +26,40 @@ st.markdown("""
         font-size: 48px !important;
         font-weight: bold;
         text-align: center;
-        background: linear-gradient(90deg, #FFD700, #000000, #FF0000);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #006400 !important;      /* Dark green – perfect on light & dark */
         margin-bottom: 5px;
     }
     .subtitle {
         text-align: center;
         font-size: 24px;
-        color: #333;
+        color: #333333 !important;
         margin-bottom: 30px;
+        opacity: 0.9;
     }
     .team {
         text-align: center;
         font-size: 20px;
-        color: #006400;
+        color: #FFD700 !important;      /* Gold – Uganda flag colour */
         font-weight: bold;
+        background-color: #000000;
+        padding: 8px;
+        border-radius: 10px;
+        display: inline-block;
     }
     .stButton>button {
-        background-color: #FFD700;
-        color: black;
+        background-color: #FFD700 !important;   /* Gold button */
+        color: black !important;
         font-weight: bold;
         height: 60px;
         font-size: 20px;
+        border: 3px solid #000000 !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        color: #006400 !important;   /* All headings visible */
+    }
+    .stError, .stWarning {
+        font-size: 24px !important;
+        text-align: center;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -112,4 +123,5 @@ if st.button("Predict ASD Risk", type="primary", use_container_width=True):
 
 st.markdown("---")
 st.caption("Group 15 • Final Year Project • Refactory • November 2025")
+
 
