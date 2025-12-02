@@ -1,10 +1,9 @@
-
 import streamlit as st
 import joblib
 import numpy as np
 import os
 
-# AUTO-FIND YOUR MODEL (no matter what it's called)
+# AUTO-FIND YOUR MODEL
 model_files = [f for f in os.listdir('.') if f.endswith(('.pkl', '.pickle'))]
 if not model_files:
     st.error("MODEL NOT FOUND! Upload your .pkl model file (drag & drop on left)")
@@ -13,16 +12,58 @@ else:
     model = joblib.load(model_files[0])
     st.success(f"Model Loaded: **{model_files[0]}** – 96.2% Accuracy")
 
-st.set_page_config(page_title="Group 15 – ASD Uganda", page_icon="Uganda")
-st.title("Early Autism Spectrum Disorder (ASD) Screening")
-st.write("**Group 15** – Sisco Cherop • Nabukenya Florence • Salha Oweci")
+# PAGE STYLING
+st.set_page_config(
+    page_title="Group 15 – ASD Uganda",
+    page_icon="Uganda",
+    layout="centered"
+)
 
-st.markdown("### Child Screening Form")
+# CUSTOM CSS – BEAUTIFUL EXHIBITION LOOK
+st.markdown("""
+<style>
+    .big-title {
+        font-size: 48px !important;
+        font-weight: bold;
+        text-align: center;
+        background: linear-gradient(90deg, #FFD700, #000000, #FF0000);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 5px;
+    }
+    .subtitle {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 30px;
+    }
+    .team {
+        text-align: center;
+        font-size: 20px;
+        color: #006400;
+        font-weight: bold;
+    }
+    .stButton>button {
+        background-color: #FFD700;
+        color: black;
+        font-weight: bold;
+        height: 60px;
+        font-size: 20px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# HEADER
+st.markdown('<p class="big-title">Early Autism Screening – Uganda</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">96.2% Accurate • Free for Every Child</p>', unsafe_allow_html=True)
+st.markdown('<p class="team">Group 15 – Sisco Cherop • Nabukenya Florence • Salha Oweci</p>', unsafe_allow_html=True)
+
+st.markdown("### Answer a few simple questions")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.subheader("A-Score Questions (0 = No, 1 = Yes)")
+    st.subheader("Behaviour Signs")
     A1 = st.selectbox("Struggles with change", [0,1], format_func=lambda x: "Yes" if x==1 else "No")
     A2 = st.selectbox("Poor eye contact", [0,1], format_func=lambda x: "Yes" if x==1 else "No")
     A3 = st.selectbox("Social difficulties", [0,1], format_func=lambda x: "Yes" if x==1 else "No")
@@ -43,14 +84,13 @@ with col3:
     Speech_Delay = st.selectbox("Speech delay?", ["No", "Yes"])
 
 if st.button("Predict ASD Risk", type="primary", use_container_width=True):
-    # Create input in correct order (22 features)
     features = np.array([[
-        A1, A2, A3, A4, A5, 0,0,0,0,  # A1–A9 (we only ask A1–A5, rest 0)
+        A1, A2, A3, A4, A5, 0,0,0,0,
         SRS, QCHAT,
         1 if Speech_Delay=="Yes" else 0,
-        0, 0, 0, 0, 0,  # other disorders
+        0, 0, 0, 0, 0,
         CARS,
-        0,  # anxiety
+        0,
         1 if Sex=="Male" else 0,
         1 if Jaundice=="Yes" else 0,
         1 if Family_ASD=="Yes" else 0
@@ -59,20 +99,16 @@ if st.button("Predict ASD Risk", type="primary", use_container_width=True):
     prediction = model.predict(features)[0]
     probability = model.predict_proba(features)[0][1]
 
+    st.markdown(f"<h1 style='text-align: center; color: {'#FF0000' if prediction==1 else '#006400'};'>"
+                f"{'HIGH RISK' if prediction==1 else 'LOW RISK'}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='text-align: center;'>Probability: {probability:.1%}</h2>", unsafe_allow_html=True)
+
     if prediction == 1:
         st.error("HIGH RISK OF AUTISM SPECTRUM DISORDER")
-        st.warning(f"Probability: {probability:.1%}")
-        st.info("Recommendation: Refer to child psychologist immediately")
+        st.warning("Recommendation: Refer to child psychologist immediately")
     else:
         st.success("LOW RISK – No significant ASD traits")
-        st.info(f"ASD Probability: {probability:.1%}")
         st.balloons()
 
 st.markdown("---")
 st.caption("Group 15 • Final Year Project • Refactory • November 2025")
-
-
-
-
-
-
