@@ -9,8 +9,7 @@ if not model_files:
     st.error("MODEL NOT FOUND! Upload your .pkl model file (drag & drop on left)")
     st.stop()
 else:
-    model = joblib.load("asd_model.pkl")
-    scaler = joblib.load("scaler.pkl")   
+    model = joblib.load("asd_model.pkl")  
     st.success("Model Loaded: ASD Model – 96.2% Accuracy")
 
 # PAGE STYLING
@@ -108,10 +107,9 @@ if st.button("Predict ASD Risk", type="primary", use_container_width=True):
         1 if Family_ASD=="Yes" else 0
     ]])
 
-    features_scaled = scaler.transform(features)
-
-    prediction = model.predict(features_scaled)[0]
-    probability = model.predict_proba(features_scaled)[0][1]
+   
+    prediction = model.predict(features)[0]
+    probability = model.predict_proba(features)[0][1]
 
     st.markdown(f"<h1 style='text-align: center; color: {'#FF0000' if prediction==1 else '#006400'};'>"
                 f"{'HIGH RISK' if prediction==1 else 'LOW RISK'}</h1>", unsafe_allow_html=True)
