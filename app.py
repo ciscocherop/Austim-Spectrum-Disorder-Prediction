@@ -9,7 +9,7 @@ if not model_files:
     st.error("MODEL NOT FOUND! Upload your .pkl model file (drag & drop on left)")
     st.stop()
 else:
-    model = joblib.load(model_files[0])
+    model = joblib.load("asd_model.pkl")
     st.success(f"Model Loaded: **{model_files[0]}** – 96.2% Accuracy")
 
 # PAGE STYLING
