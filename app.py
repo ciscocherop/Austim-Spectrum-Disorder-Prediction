@@ -10,7 +10,8 @@ if not model_files:
     st.stop()
 else:
     model = joblib.load("asd_model.pkl")
-    st.success(f"Model Loaded: **{model_files[0]}** – 96.2% Accuracy")
+    scaler = joblib.load("scaler.pkl")   
+    st.success("Model Loaded: ASD Model – 96.2% Accuracy")
 
 # PAGE STYLING
 st.set_page_config(
@@ -107,8 +108,10 @@ if st.button("Predict ASD Risk", type="primary", use_container_width=True):
         1 if Family_ASD=="Yes" else 0
     ]])
 
-    prediction = model.predict(features)[0]
-    probability = model.predict_proba(features)[0][1]
+    features_scaled = scaler.transform(features)
+
+    prediction = model.predict(features_scaled)[0]
+    probability = model.predict_proba(features_scaled)[0][1]
 
     st.markdown(f"<h1 style='text-align: center; color: {'#FF0000' if prediction==1 else '#006400'};'>"
                 f"{'HIGH RISK' if prediction==1 else 'LOW RISK'}</h1>", unsafe_allow_html=True)
